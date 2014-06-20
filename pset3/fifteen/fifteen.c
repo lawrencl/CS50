@@ -34,6 +34,14 @@ int board[MAX][MAX];
 // board's dimension
 int d;
 
+// initialize global variables
+int tile;
+int blankspace;
+int x;
+int y;
+int i;
+int j;
+
 // prototypes
 void clear(void);
 void greet(void);
@@ -43,6 +51,9 @@ bool move(int tile);
 bool won(void);
 void save(void);
 
+/**
+ * Main function - sets up how game will operate.
+ */
 int main(int argc, string argv[])
 {
     // greet player
@@ -64,6 +75,13 @@ int main(int argc, string argv[])
         return 2;
     }
 
+    // initialixing x and y here so 0 does not reset every time you call move function
+    else
+    {
+        x = (d - 1);
+        y = (d - 1);
+    }
+    
     // initialize the board
     init();
 
@@ -83,6 +101,7 @@ int main(int argc, string argv[])
         if (won())
         {
             printf("ftw!\n");
+            //printf("Winner Chicken Dinner!\n");
             break;
         }
 
@@ -132,6 +151,27 @@ void greet(void)
 void init(void)
 {
     // TODO
+    int dsquared = (d * d);
+    int n = 0;
+ 
+    // two for loops to iterate through 2d array - rows/columns
+    for (int i = 0; i < d; i++)
+    {
+        for (int j = 0; j < d; j++)
+        {
+            // this will initialize the array counting from largest number down to d * d - 1
+            // n is used as a counter so we are subtracting by one more each time 
+            n = n + 1;
+            board[i][j] = (dsquared - n);
+        }
+    }   
+    // if d is even and the tiles on board odd, swap 1 and 2 so game can be won
+    if ((d % 2) == 0)
+    {
+        int temp = board[d - 1][d - 2];
+        board[d - 1][d - 2] = board[d - 1][d - 3];
+        board[d - 1][d - 3] = temp; 
+    }               
 }
 
 /**
@@ -140,7 +180,35 @@ void init(void)
 void draw(void)
 {
     // TODO
-}
+     // initialize variables
+    int n = 0;
+ 
+    // iterate over rows
+    for (int i = 0; i < d; i++)
+    {
+        // iterate over columns
+        for (int j = 0; j < d; j++)
+        {
+            // subtract by one more each time
+            n = (n + 1); 
+ 
+            // print the number of the tile except for the 0 tile
+            if (board[i][j] > 0) 
+            {
+                // use %2d so grid spacing consistently 2 spaces
+                printf("| %2d ", board[i][j]);
+            }
+ 
+            // for 0 tile, print the space for tiles to move
+            if (board[i][j] == 0) 
+            {
+                printf("| __ ");
+            }
+        }//end inner FOR LOOP
+        // print two lines after each row to make board
+        printf("|\n\n"); 
+    }//end outer FOR LOOP  
+}//end void draw
 
 /**
  * If tile borders empty space, moves tile and returns true, else
@@ -149,6 +217,38 @@ void draw(void)
 bool move(int tile)
 {
     // TODO
+    // search board for user tile
+    // iterate through rows to find tile
+    for (int i = 0; i < d; i++) 
+    {
+        // iterate through columns to find tile
+        for (int j = 0; j < d; j++) 
+        {
+            // if user entered tile that exists on the board
+            if(tile == board[i][j]) 
+            {
+                // initialize variable for 0 
+                int blankspace = 0;       
+ 
+                // test if tile is adjacent to blankspace
+                if (((x == (i - 1)) && (j == y)) ||  ((x == (i + 1)) && (j == y)) ||
+                ((i == x) && (y == (j - 1))) || ((i == x) && (y == (j + 1))))
+                {
+                    // printf("\nPosition of tile %d is board[%d][%d] = %2d.\n", tile, i, j, board[i][j]);
+                    // printf("Position of blankspace is: board[%d][%d] = %d\n", x, y, blankspace);
+ 
+                    // swap tile with blankspace if tile is adjacent to blankspace
+                    board[x][y] = tile;
+                    board[i][j] = blankspace;
+                    // printf("New position of tile %d is board[%d][%d] = %2d.\n", tile, x, y, board[x][y]);
+                    // printf("New position of blankspace is: board[%d][%d] = %d\n", i, j, blankspace);
+                    x=i;// new x position
+                    y=j;// new y position
+                    return true;
+                }   
+            } 
+        }
+    }
     return false;
 }
 
@@ -159,6 +259,25 @@ bool move(int tile)
 bool won(void)
 {
     // TODO
+    // initializes variables
+    int n = 1;
+    
+    // iterates through board
+    for (int i = 0; i < d; i++) 
+    {
+        for (int j = 0; j < d; j++)
+        {
+            if (board[i][j] == n)
+            {
+                n++;
+                if (n == d*d && board[d-1][d-1] == 0)
+                {
+                    // validates last tile to be 0
+                    return true;
+                }
+            }
+        }
+    }
     return false;
 }
 
