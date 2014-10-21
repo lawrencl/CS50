@@ -1,0 +1,32 @@
+0. What is pneumonoultramicroscopicsilicovolcanoconiosis?
+This is the longest word in the Oxford English Dictionary. It means getting a factitious form of pneumoconiose, caused by breathing in microscopic silicaparticles from vulcanos.
+
+1. According to its man page, what does getrusage do?
+Returns resource usage measures for who, which can be SELF, CHILDREN or THREAD.
+
+2. Per that same man page, how many members are in a variable of type struct rusage?
+16 members
+
+3. Why do you think we pass before and after by reference (instead of by value) to calculate, even though we’re not changing their contents?
+Because this way costs less memory then by passing it by value since we are not going to be changing the values.
+
+4. Explain as precisely as possible, in a paragraph or more, how main goes about reading words from a file. In other words, convince us that you indeed understand how that function’s for loop works.
+Main reads one character at a time until the character that is read is not alphabetical or the maximum word length is exceeded. If the non-alphabetical character is a number, then the word is ignored. If the non-alphabetical character is anything else (namely a space), then the word is declared to be a word, terminated with a null deliminator, and passed to check(). After that, the loop just continues until the EOF character is reached.
+
+5. Why do you think we used fgetc to read each word’s characters one at a time rather than use fscanf with a format string like "%s" to read whole words at a time? Put another way, what problems might arise by relying on fscanf alone?
+If you use fscanf alone, we will not be able to easily account for strings that have digits in them. This way, by pulling one character at a time, if we pull a digit, we can immediately skip the rest of the word.
+
+6. Why do you think we declared the parameters for check and load as const?
+const makes it so that it cannot be modified by the function.
+
+7. What data structure(s) did you use to implement your spell-checker? Be sure not to leave your answer at just "hash table," "trie," or the like. Expound on what’s inside each of your "nodes."
+I used a trie as the data structure. This required creating a tree of nodes that consisted of a boolean value which indicated the end of a word and an array of pointers to nodes (node*).
+
+8. How slow was your code the first time you got it working correctly?
+First pass was about .08 seconds slower than it is now. I was able to clean up the code for unload() to be more efficient. 
+
+9. What kinds of changes, if any, did you make to your code over the course of the week in order to improve its performance?
+Removing some of the redundacies from unload() that I thought were unnecessary.
+
+10. Do you feel that your code has any bottlenecks that you were not able to chip away at?
+If I had more time maybe the check() and load() could be reduced in number of code lines.
